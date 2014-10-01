@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>{cfg:(site_title,sys)}-{$channel_name}</title>
+<meta name="keywords" content="{cfg:(keywords,sys)}"/>
+<meta name="description" content="{cfg:(description,sys)}"/>
+<link rel="stylesheet" type="text/css" href="/common/images/common.css"/>
+<link rel="stylesheet" type="text/css" href="/common/images/expand.css"/>
+<link rel="stylesheet" type="text/css" href="images/css.css"/>
+<link rel="stylesheet" type="text/css" href="images/member.css"/>
+<script src="{cfg:(dirpath,base)}/common.php?app=sys&app_act=web.config&app_ajax=1"></script>
+<script src="/common/js/kj.js"></script>
+<script src="/common/js/kj.ajax.js"></script>
+<script src="/common/js/kj.dialog.js"></script>
+</head>
+<body>
+{include(header)}
+<div class="main">
+	<div style="float:left;height:10px;width:100%">&nbsp;</div>
+	<div class="member_left">
+    	<div class="memver_L_top"><img src="images/title_help.gif"></div>
+		{foreach($arr_help as $item)}
+        <div class="memver_L_menu_out" onMouseOver="this.className='memver_L_menu_over';" onMouseOut="this.className='memver_L_menu_out';" onClick="location='?app_act=help&id={$item['article_id']}'">{$item['article_title']}</div>
+		{/foreach}
+        <div class="memver_L_menu_out" onMouseOver="this.className='memver_L_menu_over';" onMouseOut="this.className='memver_L_menu_out';" onClick="location='?app_act=msg'">顾客留言</div>
+		{if(!empty($channel_name))}
+        <div class="memver_L_menu_over">{$channel_name}</div>
+		{/if}
+      <div class="memver_L_btm"></div>
+   </div>
+  
+  	<div class="member_right1">{$channel_name}</div>
+	<div class="member_right2 news_list" style="padding-top:7px">
+	 {foreach($arr_list['list'] as $item)}
+		<li><a href="?app_act=news.view&id={$item['article_id']}" target="_blank">{$item['article_title']}</a></li>
+	 {/foreach}
+	</div>
+	<div class="pPage" id="id_pPage" style="margin-top:20px">
+	{$arr_list['pagebtns']}
+	</div>        
+</div>
+{include(footer)}
+</body>
+</html>

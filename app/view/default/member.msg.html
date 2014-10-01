@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>{cfg:(site_title,sys)}-会员中心</title>
+<meta name="keywords" content="{cfg:(keywords,sys)}"/>
+<meta name="description" content="{cfg:(description,sys)}"/>
+<link rel="stylesheet" type="text/css" href="/common/images/common.css"/>
+<link rel="stylesheet" type="text/css" href="/common/images/expand.css"/>
+<link rel="stylesheet" type="text/css" href="images/css.css"/>
+<link rel="stylesheet" type="text/css" href="images/member.css"/>
+<script src="{cfg:(dirpath,base)}/common.php?app=sys&app_act=web.config&app_ajax=1"></script>
+<script src="/common/js/kj.js"></script>
+<script src="/common/js/kj.rule.js"></script>
+<script src="/common/js/kj.alert.js"></script>
+<script src="/common/js/kj.dialog.js"></script>
+<script src="/common/js/kj.ajax.js"></script>
+<style>
+.me_info{float:left;width:90%;text-align:left;padding-left:5px;margin-top:5px;font-weight:bold}
+.me_beta{float:left;width:90%;text-align:left;padding-left:35px;margin-bottom:10px;margin-top:5px;color:#888888}
+.me_content{float:left;width:90%;text-align:left;padding:8px 0px 5px 30px}
+.me_act{float:left;width:90%;text-align:left;padding:8px;border-bottom:1px #cccccc solid}
+.me_return{float:left;width:90%;text-align:left;padding:8px 0px 5px 0px}
+.me_return .return_content{text-align:left;float:left;padding:5px;width:90%;color:#ff8800;border:1px #cccccc dotted;margin-left:30px}
+.me_return .return_beta{width:90%;text-align:left;float:left;padding:5px 0px 0px 30px;color:#888888}
+</style>
+</head>
+<body>
+{include(member_header)}
+<div class="main">
+	<div style="float:left;width:100%;height:5px;font-size:0px">&nbsp;</div>
+	{include(member_left)}
+  	<div class="member_right1">个人资料</div>
+	<div class="member_right3">
+		{foreach($arr_list['list'] as $item)}
+		<div class="me_info"> 姓名：{$item["msg_name"]}&nbsp;&nbsp;&nbsp;&nbsp;电话：{$item["msg_tel"]}&nbsp;&nbsp;&nbsp;&nbsp;邮箱：{$item["msg_email"]}</div>
+		<div class="me_content">{$item["msg_cont"]}</div>
+		<div class="me_beta">时间：{$item["msg_time"]}　　IP：{$item["msg_ip"]}</div>
+		<div class="me_return" id="id_return_{$item["msg_id"]}">
+		{if(!empty($item["msg_recont"]))}
+			<div class="return_content">{$item["msg_recont"]}</div>
+			<div class="return_beta">&nbsp;&nbsp;时间：{$item["msg_retime"]}</div>
+		{/if}
+		</div>
+		{/foreach}
+	</div>
+</div>
+{include(footer)}
+</body>
+</html>

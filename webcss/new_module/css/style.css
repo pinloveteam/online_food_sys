@@ -1,0 +1,63 @@
+body{
+	background-color: #440000;
+	color: #fff;
+	font-family: "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", tahoma, arial, simsun, "宋体";
+}
+.wrap{
+	/*background-color: #5A0000;*/
+}
+.navbar{
+	text-align: center;
+	color: #fff;
+}
+
+.text-16{
+	font-size: 16px;
+}
+
+.text-26{
+	font-size: 26px;
+}
+.navbar-nav{
+	margin-left: 40px;
+	margin-top: 20px;
+}
+.navbar-nav li{
+	margin-left: 20px;
+}
+.nav li a{
+	color: #fff;
+}
+.nav li a:hover,.nav li a:focus,.nav li .active{
+	background-color: #fff;
+	color: #000000;
+}
+.nav-bottom{
+	letter-spacing:10px;
+	background-color: #2B0001;
+	-moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+	-webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+.pic{
+	border: solid 3px #F1ED3B;
+}
+.yh{
+	background-color: #750000;
+	-moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+	-webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+}
+
+.info{
+	padding: 20px;
+}
+.title{
+	font-size: 18px;
+	color: #EFEB3A;
+}
+
+.indexFooter{
+	letter-spacing:5px;
+	background-color: #5A0000;
+}

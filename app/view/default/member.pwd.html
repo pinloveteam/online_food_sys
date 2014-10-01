@@ -1,0 +1,102 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>{cfg:(site_title,sys)}-会员中心</title>
+<meta name="keywords" content="{cfg:(keywords,sys)}"/>
+<meta name="description" content="{cfg:(description,sys)}"/>
+<link rel="stylesheet" type="text/css" href="/common/images/common.css"/>
+<link rel="stylesheet" type="text/css" href="/common/images/expand.css"/>
+<link rel="stylesheet" type="text/css" href="images/css.css"/>
+<link rel="stylesheet" type="text/css" href="images/member.css"/>
+<script src="{cfg:(dirpath,base)}/common.php?app=sys&app_act=web.config&app_ajax=1"></script>
+<script src="/common/js/kj.js"></script>
+<script src="/common/js/kj.rule.js"></script>
+<script src="/common/js/kj.alert.js"></script>
+<script src="/common/js/kj.dialog.js"></script>
+<script src="/common/js/kj.ajax.js"></script>
+</head>
+<body>
+{include(member_header)}
+<div class="main">
+	<div style="float:left;width:100%;height:5px;font-size:0px">&nbsp;</div>
+	{include(member_left)}
+  	<div class="member_right1">个人资料</div>
+	<form name="frm_member" method="post" action="?app=ajax&app_act=useredit" onsubmit="return thisjs.frm_ajax();">
+	<div class="member_right3" style="font-size:12px;">
+    	<div class="member_right6a">登录账号：</div>
+        <div class="member_right6b"><span class="txt_orange14B">{$this_login_user->uname}</span></div>
+        
+        <div class="member_right6a">原密码：</div>
+      <div class="member_right6c"><input type="password" name="oldpwd" id="id_oldpwd" class="pTxt1 pTxtL150"/>
+      </div>
+        
+        <div class="member_right6a">新的密码：</div>
+      <div class="member_right6c"><input type="password" name="pwd1" id="id_pwd1" class="pTxt1 pTxtL150"/>
+      </div>
+        
+        <div class="member_right6a">再次输入：</div>
+      <div class="member_right6c"><input type="password" name="pwd2" id="id_pwd2" class="pTxt1 pTxtL150"/>
+      </div>
+        
+        <div class="member_right6a"><font class="txt_red">*</font> 邮箱：</div>
+      <div class="member_right6c"><input name="email" type="text" class="pTxt1 pTxtL150" id="id_email" value="{$editinfo['user_email']}"/> 用于找回密码！
+      </div>
+        
+        <div class="member_right6a"></div>
+        <div class="member_right6b" style="margin-top:10px; margin-left:-3px; margin-bottom:20px;"><input type="submit" name="btn_submit"  value="确认修改" class="btn_bg3"></div>
+        
+	</div>
+</form>
+</div>
+<script>
+var thisjs = new function() {
+
+	this.frm_ajax = function() {
+		if(!kj.rule.types.email(document.frm_member.email.value)) {
+			alert("输入邮箱格式不正确");
+			document.frm_member.email.focus();
+			return false;
+		}
+		if(document.frm_member.pwd1.value!="" || document.frm_member.pwd2.value!="") {
+			if(document.frm_member.pwd1.value != document.frm_member.pwd2.value) {
+				alert("两次输入密码不正确");
+				document.frm_member.pwd1.focus();
+				return false;
+			}
+			if(!kj.rule.types.pwd(document.frm_member.pwd1.value)) {
+				alert(kj.cfg('rule_pwd_tips'));
+				document.frm_member.pwd1.focus();
+				return false;
+			}
+			if(document.frm_member.oldpwd.value=="") {
+				alert("请输入原密码");
+				document.frm_member.oldpwd.focus();
+				return false;
+			}
+		}
+		kj.ajax.post(document.frm_member,function(data){
+			var obj_data=kj.json(data);
+			if(obj_data.isnull) {
+				alert("操作失败");
+			} else {
+				if('code' in obj_data && obj_data.code=='0') {
+					document.frm_member.pwd1.value = '';
+					document.frm_member.pwd2.value = '';
+					document.frm_member.oldpwd.value = '';
+					kj.alert.show("更新成功");
+				} else {
+					if("msg" in obj_data) {
+						kj.alert(obj_data.msg);
+					} else {
+						kj.alert("保存失败");
+					}
+				}
+			}
+		});
+		return false;
+	}
+}
+</script>
+{include(footer)}
+</body>
+</html>

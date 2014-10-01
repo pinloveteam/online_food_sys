@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>{cfg:(site_title,sys)}-会员中心</title>
+<meta name="keywords" content="{cfg:(keywords,sys)}"/>
+<meta name="description" content="{cfg:(description,sys)}"/>
+<link rel="stylesheet" type="text/css" href="/common/images/common.css"/>
+<link rel="stylesheet" type="text/css" href="/common/images/expand.css"/>
+<link rel="stylesheet" type="text/css" href="images/css.css"/>
+<link rel="stylesheet" type="text/css" href="images/member.css"/>
+<script src="{cfg:(dirpath,base)}/common.php?app=sys&app_act=web.config&app_ajax=1"></script>
+<script src="/common/js/kj.js"></script>
+<script src="/common/js/kj.page.js"></script>
+<script src="/common/js/kj.ajax.js"></script>
+</head>
+<body>
+{include(member_header)}
+<div class="main">
+	<div style="float:left;width:100%;height:5px;font-size:0px">&nbsp;</div>
+	{include(member_left)}
+	<div style="float:left;width:730px;">
+		<div class="member_right1">我的积分</div>
+		<div class="member_right3" style="font-size:12px;">
+		
+			<div class="member_right8a">尊敬的会员：<font class="txt_orangeB">{$this_login_user->uname}</font> ，您现在累计的积分为：<font class="txt_redB">{$this_login_user->get_score()}</font> 分，可等值抵扣消费金额 <font class="txt_redB">{$score_money}</font> 元。</div>
+			
+			<div class="member_right8b">
+				<div class="member_right8b1" style="width:150px;">时间</div>
+				<div class="member_right8b1" style="width:100px;">收入(分)</div>
+				<div class="member_right8b1" style="width:100px;">支出(分)</div>
+				<div class="member_right8b1" style="width:100px;">账户余额(分)</div>
+				<div class="member_right8b1" style="width:230px;">详情</div>
+			</div>
+			{set $score=0}
+			{foreach($action_list["list"] as $item)}
+			<div class="member_right8c">
+				<div class="member_right8c1">{$item["action_addtime"]}</div>
+				<div class="member_right8c2">{if($item["action_score"]>0)}+{$item["action_score"]}{/if}</div>
+				<div class="member_right8c3">{if($item["action_score"]<0)}{$item["action_score"]}{/if}</div>
+				<div class="member_right8c4">{$action_list["score"]-$score}</div>
+				<div class="member_right8c5">{$item["beta"]}</div>
+				{set $score+=$item["action_score"]}
+		   </div>
+			{/foreach}      
+			
+		</div>
+		<div class="pPage" id="id_pPage" style="margin-top:20px">
+		{$action_list['pagebtns']}
+		</div>
+	</div>
+</div>
+{include(footer)}
+</body>
+</html>

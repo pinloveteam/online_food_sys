@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>{cfg:(site_title,sys)}-会员中心</title>
+<meta name="keywords" content="{cfg:(keywords,sys)}"/>
+<meta name="description" content="{cfg:(description,sys)}"/>
+<link rel="stylesheet" type="text/css" href="/common/images/common.css"/>
+<link rel="stylesheet" type="text/css" href="/common/images/expand.css"/>
+<link rel="stylesheet" type="text/css" href="images/css.css"/>
+<link rel="stylesheet" type="text/css" href="images/member.css"/>
+<script src="{cfg:(dirpath,base)}/common.php?app=sys&app_act=web.config&app_ajax=1"></script>
+<script src="/common/js/kj.js"></script>
+<script src="/common/js/kj.page.js"></script>
+<script src="/common/js/kj.ajax.js"></script>
+<style>
+.me_state_float{position:absolute;}
+</style>
+</head>
+<body>
+{include(member_header)}
+<div class="main">
+	<div style="float:left;width:100%;height:5px;font-size:0px">&nbsp;</div>
+	{include(member_left)}
+	<div style="float:left;width:730px;">
+		<div class="member_right1">订单明细</div>
+		<div class="member_right3" style="font-size:12px;">
+		{foreach($order_list['list'] as $item=>$key)}
+			<div class="member_right9a">
+				<div class="member_right9b">• <font class="txt_redB">{$item}</font>（{fun_get::weekday($item)}）</div>
+			
+				{foreach($key as $order)}
+				<div class="member_right9c">
+					<div style="float:left;width:90%">&nbsp;&nbsp;&nbsp;<a href="index.php?app_act=shop&id={$order['order_shop_id']}" style="color:#888888">{$order_list['shop']['id_'.$order['order_shop_id']]}</a></div>
+					<div class="member_right9d1"><font class="txt_orangeB">{$order['addtime']}</font><br>{$order['order_name']}/{$order['order_sex']}</div>
+					<div class="member_right9d2">
+					{foreach($order['menu'] as $menu)}
+						<div class="member_right9f" >
+							<div class="member_right9f1" style="height:auto">
+							{set $price=0}
+							{foreach($menu as $item)}
+								{set $price+=$order_list['price']['id_'.$item]}
+								<li style="float:left;padding-left:10px">{$order_list['menu']['id_'.$item]['menu_title']}</li>
+							{/foreach}
+							</div>
+							<div class="member_right9f2">￥{$price} × {$order['menunum'][implode(',',$menu)]} = ￥{$order['menunum'][implode(',',$menu)]*$price}</div>
+						</div>
+					{/foreach}
+					</div>
+					<div class="member_right9d3">总计：{$order['order_total']}{if(!empty($order['order_score_money']))}<br>抵扣：{$order['order_score_money']}{/if}{if(!empty($order['order_favorable']))}<br>优惠：{$order['order_favorable']}{/if}<br>应付：<font class="txt_redB">{$order['order_total_pay']}</font></div>
+				</div>
+				{/foreach}
+			</div>
+		{/foreach}
+		</div>
+
+			
+		<div class="pPage" id="id_pPage" style="margin-top:20px">
+		{$order_list['pagebtns']}
+		</div>        
+	</div>
+</div>
+{include(footer)}
+</body>
+</html>

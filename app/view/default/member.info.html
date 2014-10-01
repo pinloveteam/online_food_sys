@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>{cfg:(site_title,sys)}-会员中心</title>
+<meta name="keywords" content="{cfg:(keywords,sys)}"/>
+<meta name="description" content="{cfg:(description,sys)}"/>
+<link rel="stylesheet" type="text/css" href="/common/images/common.css"/>
+<link rel="stylesheet" type="text/css" href="/common/images/expand.css"/>
+<link rel="stylesheet" type="text/css" href="images/css.css"/>
+<link rel="stylesheet" type="text/css" href="images/member.css"/>
+<script src="{cfg:(dirpath,base)}/common.php?app=sys&app_act=web.config&app_ajax=1"></script>
+<script src="/common/js/kj.js"></script>
+<script src="/common/js/kj.rule.js"></script>
+<script src="/common/js/kj.alert.js"></script>
+<script src="/common/js/kj.dialog.js"></script>
+<script src="/common/js/kj.ajax.js"></script>
+</head>
+<body>
+{include(member_header)}
+<div class="main">
+	<div style="float:left;width:100%;height:5px;font-size:0px">&nbsp;</div>
+	{include(member_left)}
+
+  
+  	<div class="member_right1">配送地址</div>
+	<div class="member_right3" style="font-size:12px;">
+		<div class="x_3 main_w5" id="id_address_info">
+		{foreach($this_info["list"] as $item)}
+			{if($last_area_id==$item['info_id'])}
+			<script>
+			kj.onload(function(){
+				var val = 0;
+				if('id_{$item["info_area3"]}' in thisjs.areainfo) {
+					val = kj.toint(thisjs.areainfo['id_{$item["info_area3"]}']["dispatch_price"]);
+				}
+				if(val ==0 && 'id_{$item["info_area2"]}' in thisjs.areainfo) {
+					val = kj.toint(thisjs.areainfo['id_{$item["info_area2"]}']["dispatch_price"]);
+				}
+				thisjs.minleast = val;
+			});
+			</script>
+			{/if}
+			<table class="x_box1{if($last_area_id==$item['info_id'])} x_sel1{/if}" id="id_info_{$item['info_id']}">
+				<tr><td style="color:#0099FF" width="150px" valign="top"><label><input name="area_select" type="radio" id="id_info_radior{$item['info_id']}" value="{$item['info_id']}" {if($last_area_id==$item['info_id'])} checked{/if} onclick="thisjs.infosel(this ,{$item['info_id']});">&nbsp;<span  id="id_info_name{$item['info_id']}">{$item['info_name']}（{$item['info_sex']}）</span></label></td>
+				<td width="130px" valign="top">【车公庙店】</td>
+				<td valign="top" id="id_info_base{$item['info_id']}">
+				<input type="hidden" value="{$item['info_area3']},{$item['info_area2']}" name="area_id">
+				{$this_info["area"]["id_".$item['info_area2']]['name']}/{$this_info["area"]["id_".$item['info_area3']]['name']} — {$item['info_louhao1']}层/{$item['info_louhao2']}室 — {$item['info_company']}/{$item['info_depart']}<br>
+				固话：{$item['info_tel']} {if($item['info_telext']!='')}转 {$item['info_telext']}{/if} / 手机：{$item['info_mobile']}<br></td>
+				<td width="100px" valign="top"><a href="javascript:thisjs.info_edit({$item['info_id']});">[ 编辑 ]</a><a href="javascript:thisjs.info_del({$item['info_id']});">[ 删除 ]</a></td></tr>
+			</table>
+		{/foreach}
+			<table class="x_box1">
+				<tr><td style="color:#0099FF" width="150px" valign="top"><label><input type="radio" name="area_select" value="0" id="id_new_info_radior"{if(count($this_info["list"])<1)} checked{/if} onclick="thisjs.infosel(this,'');" >使用新地址</label></td>
+				<td valign="top" id="id_new_infocol">
+				<table style="display:none" id="id_new_infosel">
+				<tr><td>地址信息：<span style="color:#ff0000">*</span></td><td>
+				<select name="area_id[]" onchange="thisjs.changearea(this.value,0);" id="id_area_0">
+					<option value=""></option>
+				{foreach($this_area["default"] as $item)}
+					<option value="{$item['area_id']}">{$item['area_name']}</option>
+				{/foreach}
+				</select>
+					<select name="area_id[]" onchange="thisjs.changearea2(this.value);" id="id_area_1">
+					</select>
+				   <span style="text-align:left;white-space:nowrap; color:#FF3300" id="id_area_beta">必填！</span>					
+					</td></tr>
+				<tr><td>楼层房间：<span style="color:#ff0000">*</span></td><td>
+						<input name="louhao1" type="text" class="pTxt1" id="textfield" maxlength="3" value="楼层"  onFocus="if(this.value=='楼层')this.value=''; this.className='pTxt2';" onBlur="if(this.value=='')this.value='楼层'; this.className='pTxt1';">&nbsp;
+						<input name="louhao2" type="text" class="pTxt1" id="textfield2" maxlength="6" value="房号"  onFocus="if(this.value=='房号')this.value=''; this.className='pTxt2';" onBlur="if(this.value=='')this.value='房号'; this.className='pTxt1';">				
+				</td></tr>
+				<tr><td>公司部门：</td><td>
+					<input name="company" type="text" class="pTxt1" id="textfield" style="margin-right:3px;" maxlength="12" value="公司名称-选填"  onFocus="if(this.value=='公司名称-选填')this.value=''; this.className='pTxt2';" onBlur="if(this.value=='')this.value='公司名称-选填'; this.className='pTxt1';">
+					<input name="depart" type="text" class="pTxt1" id="textfield2" maxlength="5" value="部门-选填"  onFocus="if(this.value=='部门-选填')this.value=''; this.className='pTxt2';" onBlur="if(this.value=='')this.value='部门-选填'; this.className='pTxt1';">				
+				</td></tr>
+				<tr><td>收 件 人：<span style="color:#ff0000">*</span></td><td>
+					<input name="name" type="text" class="pTxt1" id="textfield" maxlength="5" style="margin-right:3px;" onFocus="this.className='pTxt2';" onBlur="this.className='pTxt1';">
+					<label><input name="sex" type="radio" value="先生" checked>先生</label> 
+					<label><input type="radio" name="sex" value="小姐">小姐</label><span class="txt_gary"> (如果有同事与您同姓，建议您填全名!)</span>				
+				
+				</td></tr>
+				<tr><td>固定电话：<span style="color:#ff0000">*</span></td><td>
+							  <input name="tel" type="text" class="pTxt1" id="textfield" style="margin-right:3px;" maxlength="8" value="八位数字不带区号" onFocus="if(this.value=='八位数字不带区号')this.value=''; this.className='pTxt2';" onBlur="if(this.value=='')this.value='八位数字不带区号'; this.className='pTxt1';">
+							  <input name="telext" type="text" class="pTxt1" id="textfield2" maxlength="4" value="分机选填" onFocus="if(this.value=='分机选填')this.value=''; this.className='pTxt2';" onBlur="if(this.value=='')this.value='分机选填'; this.className='pTxt1';">
+				</td></tr>
+				<tr><td>手机号码：<span style="color:#ff0000">*</span></td><td>
+					<input name="mobile" type="text" class="pTxt1" id="textfield" maxlength="11" onFocus="this.className='pTxt2';" onBlur="this.className='pTxt1';">
+				
+				</td></tr>
+				</table>
+				</td></tr>
+			</table>
+			<table class="x_box1 x_sel1" id="id_edit_infodiv" style="display:none">
+				<tr><td style="color:#0099FF" width="150px" valign="top"><input type="radio" name="area_select" id="id_new_edit_radior">编辑信息</td>
+				<td valign="top" id="id_info_editcol">
+				</td></tr>
+				<tr><td style="color:#0099FF" width="150px" valign="top"></td>
+				<td valign="top"><a href="javascript:thisjs.info_save();"><img src="images/btn_submit2.gif"></a>&nbsp;&nbsp;<a href="javascript:thisjs.info_cancel(true);">取消</a>			</td></tr>
+			</table>
+		</div>
+	</div>
+    <div class="order_Box_add_right3"></div>
+</div>
+</body>
+</html>

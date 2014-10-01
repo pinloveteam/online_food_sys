@@ -1,0 +1,206 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>{cfg:(site_title,sys)}-店铺管理</title>
+<meta name="keywords" content="{cfg:(keywords,sys)}"/>
+<meta name="description" content="{cfg:(description,sys)}"/>
+<link rel="stylesheet" type="text/css" href="/common/images/common.css"/>
+<link rel="stylesheet" type="text/css" href="/common/images/expand.css"/>
+<link rel="stylesheet" type="text/css" href="images/css.css"/>
+<script src="{cfg:(dirpath,base)}/common.php?app=sys&app_act=web.config&app_ajax=1"></script>
+<script src="/common/js/kj.js"></script>
+<script src="/common/js/kj.dialog.js"></script>
+</head>
+<body>
+{include(header)}
+<div class="main">
+	<div class="right">
+		{if(!empty($opentime['cont']))}
+		<div class="x_topbg">&nbsp;</div>
+		<div class="x_box1">
+			<div class="x_tit">{$opentime['title']}</div>
+			<div class="x_cont">{$opentime['cont']}</div>
+		</div>
+		<div class="x_bootbg">&nbsp;</div>
+		<div class="h_3">&nbsp;</div>
+		{/if}
+		{if(!empty($arr_activitie))}
+		<div class="x_topbg">&nbsp;</div>
+		<div class="x_list1">
+			<li class="x_tit"><span style="float:left">活动公告</span><span style="float:right"><a href="?app_act=news&channel_key=activitie" style="font-size:12px;color:#ff8800;font-weight:200">更多</a></span></li>
+			{foreach($arr_activitie as $item)}
+			<li><a href="?app_act=news.view&id={$item['article_id']}" target="_blank">{$item['article_title']}</a></li>
+			{/foreach}
+		</div>
+		<div class="x_bootbg">&nbsp;</div>
+		{/if}
+		<div class="h_3" id="id_cart_position">&nbsp;</div>
+		<div style="float:left;width:241px" id="id_cart">
+			<div class="x_topbg">&nbsp;</div>
+			<div class="cart_float">
+				<div class="cart_tit">我的饭盒</div>
+				<div class="cart_box">
+					<div class="x_list" id="id_cart_box">
+					</div>
+					<div class="x_info a1" id="id_cart_info"></div>
+					<div class="x_btn"><input type="button" name="btn_ok" value="提交订单" class="btn_bg1" onclick="thisjs.cart_submit();">&nbsp;&nbsp;<input type="button" name="btn_clear" value="清空" class="btn_bg1" onclick="thisjs.clear();"></div>
+				</div>
+			</div>
+			<div class="x_bootbg">&nbsp;</div>
+		</div>
+	</div>
+	{if(count($arr_menu["tj"])>0)}
+	<div class="div_tit2 main_w2"><span class="x_l"><h4>精品推荐</h4></span></div>
+	<div class="div_menu1 main_w3">
+		{foreach($arr_menu["tj"] as $menu)}
+			<div class="x_box{if(!empty($menu['menu_attribute']))} menu_tips_{$menu['menu_attribute']}{/if}"{if($menu['num']>0&&$cfg_opentime['nowindex']>0)} onmouseover="kj.addClassName(this,'x_sel');" onmouseout="kj.delClassName(this,'x_sel');" onclick="thisjs.cart_add({id:'{$menu['menu_id']}',name:'{$menu['menu_title']}',pic:'{$menu['menu_pic_small']}',price:'{$menu['menu_price']}',type:'{$menu['menu_type']}',num:'{$menu['num']}'});"{else}style='cursor:default'{/if}>
+				<li class='x_tit'>【{$menu['menu_title']}】</li>
+				<li class='x_intro'>主料：{$menu['menu_intro']}</li>
+				<li class='x_pic'><img src="{$menu['menu_pic']}"></li>
+				<li class="x_tip{if($cfg_opentime['nowindex']>0)}{if($menu['num']>0)} menu_state_on{else} menu_state_off{/if}{else if($cfg_opentime['havenext']==1)} menu_state_wait{else} menu_state_tomorrow{/if}"><font style="font-size:30px;font-size:40px\9">{$menu['price_int']}</font>.{$menu['price_float']}</li>
+			</div>
+		{/foreach}
+	</div>
+	{/if}
+	{foreach($arr_menu["list"] as $item)}
+	<div class="div_tit2 main_w2"><span class="x_l"><h4>{$item["name"]}</h4></span></div>
+	<div class="div_menu2 main_w3">
+		{foreach($item['list'] as $menu)}
+		<li {if($menu['num']>0 && $cfg_opentime['nowindex']>0)}onmouseover="thisjs.mouseover('{$menu['menu_id']}');" onmouseout="thisjs.mouseout('{$menu['menu_id']}');" onclick="thisjs.cart_add({id:'{$menu['menu_id']}',name:'{$menu['menu_title']}',pic:'{$menu['menu_pic_small']}',price:'{$menu['menu_price']}',type:'{$menu['menu_type']}'});" id="id_li_{$menu['menu_id']}"{else}class="menu_off"{/if}><span class="x_nosel" id="id_nosel_{$menu['menu_id']}">&nbsp;</span><span class="x_title" id="id_title_{$menu['menu_id']}">{$menu['menu_title']}</span>{if($cfg_opentime['nowindex']>0)}{if($menu['num']<1)}<span class="x_off">卖完</span>{/if}{else if($cfg_opentime['havenext']==1)}<span class="x_off">即将开始</span>{else}<span class="x_off">明天继续</span>{/if}<span class="x_price">￥{$menu['price_int']}</span></li>
+		{/foreach}
+	</div>
+	{/foreach}
+</div>
+<script>
+var thisjs = new function() {
+	this.defaulttop = 0;
+	this.defaultleft = 0;
+	this.mintotal = kj.toint('{$dispatch_min_price}');//最低起送价
+	this.total = 0;//合计金额
+	this.overid = 0;//上次鼠标移动id
+	this.cart_add = function(o) {
+		var obj = kj.obj("#id_cart_box");
+		var obj_cart_num = kj.obj("#id_cart_num_" + o.id);
+		if(obj_cart_num) {
+			var obj_cart_price = kj.obj("#id_cart_price_" + o.id);
+			obj_cart_num.value = kj.toint(obj_cart_num.value) + 1;
+			obj_cart_price.innerHTML = "￥"+kj.toint(obj_cart_num.value) * o.price;
+		} else {
+			var obj_li=document.createElement("li");
+			obj_li.id = "id_cart_" + o.id;
+			obj_li.innerHTML = '<input type="hidden" name="cartid[]" value="'+o.id+'"><input type="hidden" name="price[]" id="id_price_'+o.id+'" value="'+o.price+'"><span class="col1">'+o.name+'</span><span class="col2"><input type="text" name="num'+o.id+'[]" value="1" id="id_cart_num_'+o.id+'" class="pTxt4" onfocus="this.select()" onkeyup="thisjs.change_num('+o.id+')"></span><span class="col3" id="id_cart_price_'+o.id+'">￥'+kj.toint(o.price)+'</span><span class="col4" onmouseover="this.className=\'col5\'" onmouseout="this.className=\'col4\'" title="删除" onclick="thisjs.del('+o.id+')">&nbsp;</span>';
+			obj.appendChild(obj_li);
+		}
+		this.refresh_price();
+	}
+	//删除
+	this.del = function(id) {
+		kj.remove("#id_cart_"+id);
+		this.refresh_price();
+	}
+	//改变数量
+	this.change_num = function(id) {
+		var obj_cart_num = kj.obj("#id_cart_num_" + id);
+		if(obj_cart_num) {
+			var obj_cart_price = kj.obj("#id_cart_price_" + id);
+			var obj_price = kj.obj("#id_price_"+id);
+			if(obj_cart_price) obj_cart_price.innerHTML = kj.toint(obj_cart_num.value) * kj.toint(obj_price.value);
+			this.refresh_price();
+		}
+	}
+	//刷新价格
+	this.refresh_price = function() {
+		var obj = kj.obj("#id_cart_box .col3");
+		var price = 0;
+		for(var i = obj.length-1 ; i >=0 ; i--) {
+			price += kj.toint(obj[i].innerHTML);
+		}
+		kj.obj("#id_cart_info").innerHTML = '共 <font style="font-size:14px;color:#FF821E">'+obj.length+'</font> 份，合计：<font style="font-size:20px;color:#FF821E">￥'+price+'</font>';
+		this.total = price;
+		return price;
+	}
+	//清空
+	this.clear = function() {
+		var obj = kj.obj("#id_cart_box");
+		obj.innerHTML = '';
+		this.refresh_price();
+	}
+	this.cart_init = function() {
+		{if($cfg_opentime['nowindex']>0)}
+		{foreach($arr_menu['cart'] as $cart)}
+			{foreach($cart as $menu)}
+				{if(isset($arr_menu["cart_menu"]["id_".$menu]))}
+				this.cart_add({id:'{$arr_menu["cart_menu"]["id_".$menu]['menu_id']}',name:'{$arr_menu["cart_menu"]["id_".$menu]['menu_title']}',pic:'{$arr_menu["cart_menu"]["id_".$menu]['menu_pic_small']}',price:'{$arr_menu["cart_menu"]["id_".$menu]['menu_price']}',type:'{$arr_menu["cart_menu"]["id_".$menu]['menu_type']}'});
+				is_new = true;
+				{/if}
+			{/foreach}
+		{/foreach}
+		{/if}
+	}
+	//提交，保存到cookie
+	this.cart_submit = function() {
+		var obj = kj.obj("#id_cart_box li");
+		//检查是否已点餐
+		if(obj.length<1) {
+			alert("温馨提示：您的购物车是空的，请先点餐！");
+			return false;
+		}
+		//点餐价格是否达到起送价
+		if(this.mintotal>0 && this.total < this.mintotal) {
+			alert("温馨提示：由于人力成本等问题，外卖定餐需起送不得低于"+this.mintotal+"元，不便之处还请您多多包涵！");
+			return false;
+		}
+		var i,val,j,arr_1=[];
+		obj = kj.obj("#id_cart_box :cartid[]");
+		for(i = 0 ; i < obj.length ; i++ ) {
+			val = kj.toint(kj.obj("#id_cart_num_"+obj[i].value).value);
+			for(j=0;j<val;j++) {
+				arr_1[arr_1.length] = obj[i].value;
+			}
+		}
+		var  str_ids = "0:" + arr_1.join("|");
+		kj.cookie_set("cart_ids" , str_ids , 24);
+		window.location.href = "?app_act=cart";
+
+	}
+
+	this.mouseover = function(id) {
+		var obj = kj.obj("#id_nosel_"+this.orderid);
+		if(obj) obj.className = 'x_nosel';
+		kj.obj("#id_nosel_"+id).className = 'x_sel1';
+		this.orderid = id;
+		kj.addClassName("#id_li_"+id , "x_sel2");
+	}
+	this.mouseout = function(id) {
+		var obj = kj.obj("#id_nosel_"+this.orderid);
+		if(obj) obj.className = 'x_nosel';
+		kj.delClassName("#id_li_"+id , "x_sel2");
+	}
+	this.cart_position = function() {
+		var t = document.documentElement.scrollTop || document.body.scrollTop;  
+		var top_div = document.getElementById( "top_div" ); 
+		if( t >= thisjs.defaulttop ) { 
+		   kj.set("#id_cart",'style.position','fixed');
+		   kj.set("#id_cart",'style.top','50px');
+		   if(thisjs.defaultleft>300) kj.set("#id_cart",'style.left',thisjs.defaultleft + 'px');
+		} else { 
+		   kj.set("#id_cart",'style.position','static');
+		  // kj.set("#id_cart",'style.top','100px');
+		} 
+	}
+}
+kj.onload(function(){
+	thisjs.cart_init();
+	var offset = kj.offset("#id_cart_position");
+	thisjs.defaulttop = offset.top;
+	thisjs.defaultleft = offset.left;
+	thisjs.cart_position();
+});
+
+window.onscroll = function(){ 
+	thisjs.cart_position();
+} 
+</script>
+{include(footer)}
+</body>
+</html>

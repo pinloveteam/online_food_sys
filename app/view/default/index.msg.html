@@ -1,0 +1,160 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>{cfg:(site_title,sys)}-在线留言</title>
+<meta name="keywords" content="{cfg:(keywords,sys)}"/>
+<meta name="description" content="{cfg:(description,sys)}"/>
+<link rel="stylesheet" type="text/css" href="/common/images/common.css"/>
+<link rel="stylesheet" type="text/css" href="/common/images/expand.css"/>
+<link rel="stylesheet" type="text/css" href="images/css.css"/>
+<link rel="stylesheet" type="text/css" href="images/member.css"/>
+<script src="{cfg:(dirpath,base)}/common.php?app=sys&app_act=web.config&app_ajax=1"></script>
+<script src="/common/js/kj.js"></script>
+<script src="/common/js/kj.dialog.js"></script>
+<script src="/common/js/kj.ajax.js"></script>
+<script src="/common/js/kj.rule.js"></script>
+<script src="/common/js/kj.alert.js"></script>
+</head>
+<body>
+{include(header)}
+<div class="main findpwd">
+	<div class="member_left">
+    	<div class="memver_L_top"><img src="images/title_help.gif"></div>
+		{foreach($arr_help as $item)}
+        <div class="memver_L_menu_out" onMouseOver="this.className='memver_L_menu_over';" onMouseOut="this.className='memver_L_menu_out';" onClick="location='?app_act=help&id={$item['article_id']}'">{$item['article_title']}</div>
+		{/foreach}
+        <div class="memver_L_menu_over">顾客留言</div>
+       <div class="memver_L_btm"></div>
+   </div>
+  	<div class="member_right1">欢迎您对本店提出宝贵的建议</div>
+	<div class="member_right2">
+		<div class="x_div3" id="id_step2">
+		<form name="frm_2" action="?app=ajax&app_act=msg_save" method="post">
+			<li id="id_msg_cont"><span class="x_1"></span><span class="x_2" style='padding-left:20px'>
+				<table><tr><td>留言内容：</td><td><textarea name="cont" cols="50" rows="5" class="pTxt1" ruletips='留言内容不能为空' required></textarea></td></tr>
+				<tr><td>您的姓名：</td><td><input type="text" name="name" value="" class="pTxt1 pTxtL200"{if(in_array('name',$options))} ruletips='请填写您的姓名' required{/if}>
+				{if(in_array('name',$options))}<span style="color:#ff0000">*</span>{else}<span class="pBeta">&nbsp;(选填)</span>{/if}</td></tr>
+				<tr><td>电子邮箱：</td><td>
+				<input type="text" name="email" value="" class="pTxt1 pTxtL200" ruletips='电子邮箱填写不正确' rule='email' {if(in_array('email',$options))} required{/if}>
+				{if(in_array('email',$options))}<span style="color:#ff0000">*</span>{else}<span class="pBeta">&nbsp;(选填)</span>{/if}
+				</td></tr>
+				<tr><td>联系电话：</td><td>
+				<input type="text" name="tel" value="" class="pTxt1 pTxtL200" ruletips='联系电话填写不正确' rule='tel' {if(in_array('tel',$options))} required{/if}>
+				{if(in_array('tel',$options))}<span style="color:#ff0000">*</span>{else}<span class="pBeta">&nbsp;(选填)</span>{/if}
+				</td></tr>
+				<tr><td>&nbsp;</td><td><input type="button" name="btn1" value="提 交" class="pBtn" onclick="thisjs.save();"></td></tr>
+				</table>
+			</span></li>
+		</form>
+		</div>
+	</div>
+</div>
+<script>
+kj.onload(function(){
+	kj.handler(".pTxt1","focus",function(){
+		kj.delClassName(this , "pTxt1");
+		kj.addClassName(this , "pTxt2");
+	});
+	kj.handler(".pTxt1","blur",function(){
+		kj.delClassName(this , "pTxt2");
+		kj.addClassName(this , "pTxt1");
+	});
+	{if($this_login_user->uid<1 && in_array('login',$options))}
+		var obj = kj.obj('#id_loginbox');
+		if(obj) {
+			thisjs.shopbox_html = obj.innerHTML;
+			kj.remove(obj);
+		}
+		kj.dialog({'html':thisjs.shopbox_html,'id':'shopbox','type':'html','title':'','w':373,'showbtnmax':false,'showbtnclose':false,'showbtnhide':false});
+	{/if}
+});
+
+var thisjs = new function() {
+	this.save = function() {
+		if(kj.rule.form(document.frm_2) == false) {
+			return false;
+		}
+		kj.ajax.post(document.frm_2 , function(data) {
+			var obj_data = kj.json(data);
+			if(obj_data.isnull || !('code' in obj_data)) {
+				alert("操作失败");
+			} else if(obj_data.code!='0') {
+				if('msg' in obj_data) {
+					alert(obj_data.msg);
+				} else {
+					alert('操作失败');
+				}
+			} else {
+				kj.alert.show('留言成功',function(){window.location='{cfg:(dirpath,base)}/';});
+				
+			}
+		});
+	}
+	{if($this_login_user->uid<1 && in_array('login',$options))}
+	this.on_login = function() {
+		kj.ajax.post(document.frmlogin , function(data) {
+			var obj_data=kj.json(data);
+			if(obj_data.isnull) {
+				alert("系统繁忙，请稍后再来试试");
+			} else {
+				if(obj_data.code == 0) {
+					location.reload(true);
+				} else {
+					if('msg' in obj_data && obj_data.msg) {
+						alert(obj_data.msg);
+					} else {
+						alert("系统繁忙，请稍后再来试试");
+					}
+					if('show_code' in obj_data && obj_data.show_code == '1') {
+						kj.show(".verify_code");
+					}
+				}
+			}
+		});
+		return false;
+	}
+	this.show_verify = function() {
+		var objpic = kj.obj("#id_verify_pic");
+		if(objpic.src.indexOf("verifycode")<0) {
+			objpic.src = '{cfg:(dirpath,base)}/common.php?app=sys&app_act=verifycode&rnd='+Math.random();
+			kj.handler(document.documentElement,"click",function(e){
+				var arr = new Array('img' , 'input');
+				var target = kj.event_target(e);
+				if(target.name!='verifycode' && target.id!='id_verify_pic') {
+					kj.hide('#id_verify');
+				}
+			});
+		}
+		kj.show('#id_verify');
+	}
+	{/if}
+}
+</script>
+{if($this_login_user->uid<1 && in_array('login',$options))}
+<div id="id_loginbox" style="display:none">
+	<form name="frmlogin" method="post" action="common.php?app=sys&app_act=login.verify" onsubmit="return thisjs.on_login();">
+	<div class="login_c" style="margin-top:0px;border:0px">
+		<div class="login_c1">用户：</div>
+		<div class="login_c2">
+			<input type="text" name="uname" class="pTxt1 pTxtL250"/>
+			<div id="id_verify" style="display:none;z-index:999;width:90%;text-align:right" onmouseover="kj.show(this);"><br><br><br><br><img src="" id="id_verify_pic" onclick="this.src='{cfg:(web_url,base)}/common.php?app=sys&app_act=verifycode&app_contenttype=img&app_rnd='+Math.random();" border=1></div>
+		</div>
+		<div class="login_c1">密码：</div>
+		<div class="login_c2">			
+<input name="pwd" type="password" class="pTxt1 pTxtL250"/></div>
+		<div class="login_c1 verify_code"{if(!$verfifycode)} style="display:none"{/if}>验证码：</div>
+		<div class="login_c2 verify_code"{if(!$verfifycode)} style="display:none"{/if}><input name="verifycode" type="text" class="pTxt1 pTxtL100"  onfocus="thisjs.show_verify('#id_verify');"/></div>
+
+		<div class="login_c1"></div>
+		<div class="login_c2"><label><input type="checkbox" name="autologin" value="1" checked>下次自动登录</label></div>
+		<div class="login_c3"><input type="submit" name="btn_submit" value=" " style="background:url(images/btn_submit2.gif) no-repeat;width:185px;height:55px;border:0px"></div>
+		<div class="login_c4"><a href="?app=index&app_act=findpwd">[ 找回密码 ]</a></div>
+		
+		<div class="login_c5">一分钟轻松注册，就可以方便订餐！[<a href="?app=index&app_act=reg" class="link_red2" style="color:#ff0000"> 免费注册 </a>]</div>
+	</div>
+	</form>
+</div>
+{/if}
+{include(footer)}
+</body>
+</html>

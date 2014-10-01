@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>选择区域</title>
+<meta name="keywords" content="" />
+<link rel="stylesheet" type="text/css" href="/common/images/common.css"/>
+<link rel="stylesheet" type="text/css" href="images/css.css"/>
+<script src="{cfg:(dirpath,base)}/common.php?app=sys&app_act=web.config&app_ajax=1"></script>
+<script src="/common/js/kj.js"></script>
+<script>
+kj.onload(function() {
+	thisjs.auto_h();
+	var arr = kj.obj("#id_left li");
+	kj.addClassName(arr[0] , "x_sel_1");
+	arr = kj.obj(".div1_child");
+	if(arr && arr.length>0) kj.show(arr[0]);
+});
+var thisjs = new function() {
+	this.index = 0;
+	this.over = function(o,id) {
+		var index = kj.index("#id_left li" , o);
+		if(index == this.index) return;
+		var arr = kj.obj("#id_left li");
+		if(index == 0 ) {
+			kj.addClassName(o , "x_sel_1");
+		} else if(index == arr.length-1) {
+			kj.addClassName(o , "x_sel_2");
+		} else {
+			kj.addClassName(o , "x_sel");
+		}
+		kj.delClassName(arr[this.index] , 'x_sel');
+		kj.delClassName(arr[this.index] , 'x_sel_1');
+		kj.delClassName(arr[this.index] , 'x_sel_2');
+		kj.hide(".div1_child");
+		kj.show("#id_child_"+id);
+		this.index = index;
+		var h1 = kj.h("#id_child_"+id);
+		var h2 = kj.h("#id_right");
+		if(h1 > h2 ) kj.h("#id_right" , h1);
+		this.auto_h();
+	}
+	//自适应高度
+	this.auto_h = function() {
+		var h1 = kj.h("#id_right");
+		var h2 = kj.h("#id_left");
+		if(h1<h2) {
+			kj.h("#id_right" , h2-2);
+		} else {
+			kj.h("#id_h" , h1-h2);
+		}
+	}
+	//选中地区
+	this.sel = function(id , name) {
+		kj.cookie_set('area_id' , id , 20000 , '');
+		kj.cookie_set('area_name' , name , 20000 , '');
+		window.parent.location.reload();
+	}
+}
+</script>
+</head>
+<body>
+<div class="div1_left" id="id_left">
+{foreach($arr_list['area'] as $item)}
+<li onmouseover="thisjs.over(this,{$item['area_id']});">{$item['area_name']}</li>
+{/foreach}
+<li class="x_h" id="id_h"></li>
+</div>
+<div class="div1_right" id="id_right">
+	{foreach($arr_list['area'] as $item)}
+	<div id="id_child_{$item['area_id']}" class="div1_child" style="display:none">
+		{foreach($arr_list['child']['id_'.$item['area_id']] as $child)}
+		<li onmouseover="kj.addClassName(this,'x_sel');"  onmouseout="kj.delClassName(this,'x_sel');" onclick="thisjs.sel({$child['area_id']} , '{$child['area_name']}');">{$child['area_name']}</li>
+		{/foreach}
+	</div>
+	{/foreach}
+</div>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{cfg:(site_title,sys)}</title>
+<meta name="keywords" content="{cfg:(keywords,sys)}"/>
+<meta name="description" content="{cfg:(description,sys)}"/>
+{include(header_js)}
+<script src="/common/js/kj.windiv.js"></script>
+</head>
+<body>
+{include(header_top)}
+<script>
+var thisjs = new function() {
+	this.over = function(o) {
+		kj.addClassName(o , "x_sel1");
+		kj.addClassName(kj.obj(".x_letter" , o) , "x_sel2");
+	}
+	this.out = function(o) {
+		kj.delClassName(o , "x_sel1");
+		kj.delClassName(kj.obj(".x_letter" , o) , "x_sel2");
+	}
+	this.keyup = function(val) {
+		val = val.toUpperCase();
+		var arr = [];
+		var obj_s = kj.obj(".x_li1 a<<innerHTML,/^" + val + "/i");
+		if(obj_s) {
+			for(var i = 0 ; i < obj_s.length ; i++ ) {
+				arr[arr.length] = obj_s[i].innerHTML;
+			}
+		}
+
+		obj_s = kj.obj("a<<className,/^none_" + val + "/i");
+		if(obj_s) {
+			for(var i = 0 ; i < obj_s.length ; i++ ) {
+				arr[arr.length] = obj_s[i].innerHTML;
+			}
+		}
+		kj.windiv.cache.init({'id':"id_search_box",'datalist':arr,'display':''});
+	}
+	//选中地区
+	this.sel = function(id , name) {
+		kj.cookie_set('area_lou_id' , id , 20000 , '');
+		kj.cookie_set('area_lou_name' , name , 20000 , '');
+		window.location.href = "{cfg:(url,base)}/";
+	}
+	//确定按钮
+	this.sel_btn = function() {
+		var val = kj.obj("#id_search_box").value;
+		var obj_s = kj.obj("a<<innerHTML,/^" + val + "/i");
+		if(!obj_s) return;
+		var arr = [];
+		var str = obj_s[0].href;
+		var arr = str.split(",");
+		arr = arr[0].split("'");
+		var id = arr[1];
+		this.sel(id , val);
+	}
+
+}
+</script>
+<div class="main">
+	<div class="div_area1">
+		<div class="x_1">
+			<div class="x_tit1"><h2>深圳站&nbsp;&nbsp;&raquo;&nbsp;&nbsp;福田区&nbsp;&nbsp;&raquo;&nbsp;&nbsp;车公庙&nbsp;&nbsp;&raquo;</h2></div>
+			<div class="x_input1"><input type="text" name="lou" value="所在楼层 - 支持拼音查找" class="pTxtL200 pTxt3" onfocus="if(this.value=='所在楼层 - 支持拼音查找') this.value='';" onblur="if(this.value=='') this.value='所在楼层 - 支持拼音查找';" onkeyup="thisjs.keyup(this.value);" id="id_search_box">&nbsp;&nbsp;<input type="button" name="btn_ok" value="确定" class="btn_1" onclick="thisjs.sel_btn();">{if(!empty($area_lou_id))}&nbsp;&nbsp;&nbsp;&nbsp;返回：<a href="{cfg:(url,base)}/" style="color:#E33F48">{$area_lou_name}</a>{/if}</font></div>
+		</div>
+		<div class="x_tit2">按拼音首字母选择</div>
+		<table style="width:100%;float:left">
+		{foreach($arr_list as $item => $key)}
+		<tr onmouseover="thisjs.over(this);" onmouseout="thisjs.out(this);">
+			<td class="x_letter">{$item}</td>
+			<td class="x_li1">
+			{foreach($key as $next)}
+				<li><a href="javascript:thisjs.sel('{$next['area_id']}','{$next['area_val']}');" class="none_{$next['area_jian']}">{$next["area_val"]}</a></li>
+			{/foreach}
+			</td>
+		</tr>
+		{/foreach}
+		</table>
+	</div>
+</div>
+</body>
+</html>

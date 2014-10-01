@@ -1,0 +1,13 @@
+<?php include cls_resolve::on_resolve('/default\/header')?>
+<script>
+kj.onload(function(){
+	kj.handler(".pTxt1","focus",function(){
+		kj.delClassName(this , "pTxt1");
+		kj.addClassName(this , "pTxt2");
+	});
+	kj.handler(".pTxt1","blur",function(){
+		kj.delClassName(this , "pTxt2");
+		kj.addClassName(this , "pTxt1");
+	});
+});
+</script>

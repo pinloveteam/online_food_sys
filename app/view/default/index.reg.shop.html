@@ -1,0 +1,239 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>{cfg:(site_title,sys)}-店铺注册</title>
+<meta name="keywords" content="{cfg:(keywords,sys)}"/>
+<meta name="description" content="{cfg:(description,sys)}"/>
+<link rel="stylesheet" type="text/css" href="/common/images/common.css"/>
+<link rel="stylesheet" type="text/css" href="/common/images/expand.css"/>
+<link rel="stylesheet" type="text/css" href="images/css.css"/>
+<script src="{cfg:(dirpath,base)}/common.php?app=sys&app_act=web.config&app_ajax=1"></script>
+<script src="/common/js/kj.js"></script>
+<script src="/common/js/kj.ajax.js"></script>
+<script src="/common/js/kj.dialog.js"></script>
+</head>
+<body>
+{include(header)}
+<div class="main">
+	<form name="frm_main" method="post" action="?app=ajax&app_act=shop.reg" onsubmit="return thisjs.on_reg();">
+	<input type="hidden" name="go_url" value="{$go_url}">
+	<div class="reg_a">
+		<div class="reg_b0"></div>
+		
+	  <div class="reg_b1">用户：</div>
+		<div class="reg_b2"><input name="uname" type="text" class="pTxt1 pTxtL200" maxlength="12"/> 
+	  <font class="txt_red">*</font></div>
+		
+		<div class="reg_b1">密码：</div>
+		<div class="reg_b2"><input type="password" name="pwd1" class="pTxt1 pTxtL200" maxlength="20"/> 
+	  <font class="txt_red">*</font></div>
+
+		<div class="reg_b1">确认密码：</div>
+		<div class="reg_b2"><input type="password" name="pwd2" class="pTxt1 pTxtL200" maxlength="20/> 
+	  <font class="txt_red">*</font></div>
+		
+		<div class="reg_b1">邮箱：</div>
+		<div class="reg_b2"><input type="text" name="email" class="pTxt1 pTxtL200"/> <font class="txt_red">*</font> <font class="txt_gary">必填！方便您以后找回账号密码！</font></div>
+		
+	  <div class="reg_b1">店名：</div>
+		<div class="reg_b2"><input name="shop_name" type="text" class="pTxt1 pTxtL200" maxlength="12"/> <font class="txt_red">*</font></div>
+	  <div class="reg_b1">联系人：</div>
+		<div class="reg_b2"><input name="shop_linkname" type="text" class="pTxt1 pTxtL200" maxlength="12"/> <font class="txt_red">*</font></div>
+	  <div class="reg_b1">联系电话：</div>
+		<div class="reg_b2"><input name="shop_linktel" type="text" class="pTxt1 pTxtL200" maxlength="12"/> <font class="txt_red">*</font></div>
+	  <div class="reg_b1">所在地区：</div>
+		<div class="reg_b2">
+			<input type="hidden" name="shop_area_id" id="id_shop_area_id" value="">
+			<input type="hidden" name="shop_area_allid" id="id_shop_area_allid" value="">
+			<input type="hidden" name="shop_area" id="id_shop_area" value="">
+			<select name="area_id[]" onchange="thisjs.changearea(this.value,0);" id="id_area_0">
+				<option value=""></option>
+			{foreach($list_area["default"] as $item)}
+				<option value="{$item['area_id']}">{$item['area_name']}</option>
+			{/foreach}
+			</select>
+			{for($i=1;$i<$list_area["depth"];$i++)}
+				<select name="area_id[]" onchange="thisjs.changearea(this.value,{$i});" id="id_area_{$i}">
+				</select>
+			{/foreach}
+			 <font class="txt_red">*</font></div>
+	  <div class="reg_b1">店铺地址：</div>
+		<div class="reg_b2"><input name="shop_address" type="text" class="pTxt1 pTxtL300" maxlength="12"/> <font class="txt_red">*</font></div>
+		<div class="reg_b3"><input type="submit" name="btn_submit" value="" style="background:url({$temp_url}images/btn_reg.gif) no-repeat;width:250px;height:55px;border:0px"></div>
+		<div class="reg_b4">一． 服务条款的确认和接纳<br />
+		  本服务协议双方为菜菜网美食馆（下称“菜菜网”）与菜菜网用户，本服务协议具有合同效力。<br />
+		  本服务协议内容包括协议正文及所有菜菜网已经发布的或将来可能发布的各类服务条款。所有条款为协议不可分割的一部分，与协议正文具有同等法律效力。<br />
+		  菜菜网的各项服务的所有权和运作权归菜菜网。菜菜网提供的服务将完全按照其发布的服务条款和操作规则严格执行。<br />
+		  用户在使用菜菜网提供的各项服务的同时，承诺接受并遵守各项相关条款的规定。菜菜网有权根据需要不时地制定、修改本协议或各项条款，如本协议有任何变更，菜菜网将在网站上刊载公告，通知予用户。如用户不同意相关变更，必须停止使用菜菜网所提供的服务。经修订的协议一经在菜菜网公布后，立即自动生效。各项条款会在发布后生效，亦成为本协议的一部分。登录或继续使用菜菜网所提供的服务将表示用户接受经修订的协议。除另行明确声明外，任何使菜菜网所提供的服务的范围扩大或功能增强的新内容均受本协议约束。<br />
+		  用户确认本服务协议后，本服务协议即在用户和菜菜网之间产生法律效力。请用户务必在注册之前认真阅读全部服务协议内容，如有任何疑问，可向菜菜网咨询。<br />
+		  无论用户事实上是否在注册之前认真阅读了本服务协议，只要用户点击协议正本下方的“确认”按钮并按照菜菜网注册程序成功注册为用户，用户的行为仍然表示其同意并签署了本服务协议。<br />
+		  用户确认：本协议条款是处理双方权利义务的当然约定依据，除非违反国家强制性法律，否则始终有效。在下订单的同时，用户也同时承认了用户拥有购买这些产品的权利能力和行为能力，并且对用户在订单中提供的所有信息的真实性负责。<br />
+		  二． 服务简介<br />
+		  菜菜网运用自己的操作系统通过国际互联网络为用户提供网络服务。同时，用户必须：<br />
+		  (1)自行配备上网的所需设备，包括个人电脑、调制解调器或其它必备上网装置。<br />
+		  (2)自行负担个人上网所支付的与此服务有关的电话费用、网络费用。<br />
+		  基于菜菜网所提供的网络服务的重要性，用户应同意：<br />
+		  (1)提供详尽、准确的个人资料。<br />
+		  (2)不断更新注册资料，符合及时、详尽、准确的要求。<br />
+		  菜菜网不公开用户的姓名、地址、电子邮箱和笔名， 除以下情况外：<br />
+		  (1)用户授权菜菜网透露这些信息。<br />
+		  (2)相应的法律及程序要求菜菜网提供用户的个人资料。<br />
+		  如果用户提供的资料包含有不正确的信息，菜菜网保留结束用户使用网络服务资格的权利。<br />
+		  三． 价格和数量<br />
+		  菜菜网将尽最大努力保证用户所购商品与网站上公布的价格一致，但价目表和声明并不构成要约。菜菜网有权在发现了其网站上显现的产品及订单的明显错误或缺货的情况下，单方面撤回任何承诺。同时，菜菜网保留对产品订购的数量的限制权。<br />
+		  产品的价格和可获性都在菜菜网上指明。这类信息将随时更改且不发任何通知。<br />
+		  四． 送货及费用<br />
+		  菜菜网将会把产品送到用户所指定的送货地址。所有在菜菜网上列出的送货时间为参考时间，参考时间的计算是根据库存状况、正常的处理过程和送货时间、送货地点的基础上估计得出的。送货费用根据用户选择的配送方式的不同而异。<br />
+		  请清楚准确地填写用户的真实姓名、送货地址及联系方式。因如下情况造成订单延迟或无法配送等，菜菜网将不承担责任：<br />
+		  (1)客户提供错误信息和不详细的地址；<br />
+		  (2)货物送达无人签收，由此造成的重复配送所产生的费用及相关的后果。<br />
+		  (3)不可抗力，例如：自然灾害、交通戒严、突发战争等。<br />
+		  五． 用户隐私制度<br />
+		  1、尊重用户个人隐私是菜菜网的一项基本政策。菜菜网一定不会在未经合法用户授权时公开、编辑或透露其注册资料及保存在菜菜网中的非公开内容，除非有法律许可要求或菜菜网在诚信的基础上认为透露这些信件在以下四种情况是必要的：<br />
+		  (1)遵守有关法律规定，遵从菜菜网合法服务程序。<br />
+		  (2)保持维护菜菜网的商标所有权。<br />
+		  (3)在紧急情况下竭力维护用户个人和社会大众的隐私安全。<br />
+		  (4)符合其它相关的要求。<br />
+		  2、用户的帐号，密码和安全性<br />
+		  用户一旦注册成功，成为菜菜网的合法用户，将得到一个密码和用户名。用户可随时根据指示改变用户的密码。用户将对用户名和密码安全负全部责任。另外，每个用户都要对以其用户名进行的所有活动和事件负全责。用户若发现任何非法使用用户帐号或存在安全漏洞的情况，请立即通告菜菜网。<br />
+		  六． 拒绝提供担保<br />
+		  用户个人对网络服务的使用承担风险。菜菜网对此不作任何类型的担保，不论是明确的或隐含的，但是不对商业性的隐含担保、特定目的和不违反规定的适当担保作限制。菜菜网不担保服务一定能满足用户的要求，也不担保服务不会受中断，对服务的及时性，安全性，出错发生都不作担保。菜菜网对在菜菜网上得到的任何商品购物服务或交易进程，不作担保。<br />
+		  七． 有限责任<br />
+		  菜菜网对任何直接、间接、偶然、特殊及继起的损害不负责任，这些损害可能来自：不正当使用网络服务，在网上购买商品或进行同类型服务，在网上进行交易，非法使用网络服务或用户传送的信息有所变动。这些行为都有可能会导致菜菜网的形象受损，所以菜菜网事先提出这种损害的可能性。<br />
+		  八． 对用户信息的存储和限制<br />
+		  菜菜网不对用户所发布信息的删除或储存失败负责。菜菜网有判定用户的行为是否符合菜菜网服务条款的要求和精神的保留权利，如果用户违背了服务条款的规定，菜菜网有中断对其提供网络服务的权利。<br />
+		  九． 用户管理<br />
+		  用户单独承担发布内容的责任。用户对服务的使用是根据所有适用于菜菜网的国家法律、地方法律和国际法律标准的。用户必须遵循：<br />
+		  (1)从中国境内向外传输技术性资料时必须符合中国有关法规。<br />
+		  (2)使用网络服务不作非法用途。<br />
+		  (3)不干扰或混乱网络服务。<br />
+		  (4)遵守所有使用网络服务的网络协议、规定、程序和惯例。<br />
+		  用户须承诺不传输任何非法的、骚扰性的、中伤他人的、辱骂性的、恐吓性的、伤害性的、庸俗的，淫秽等信息资料。另外，用户也不能传输何教唆他人构成犯罪行为的资料；不能传输助长国内不利条件和涉及国家安全的资料；不能传输任何不符合当地法规、国家法律和国际法律的资料。未经许可而非法进入其它电脑系统是禁止的。<br />
+		  若用户的行为不符合以上提到的服务条款，菜菜网将作出独立判断立即取消用户服务帐号。用户需对自己在网上的行为承担法律责任。用户若在菜菜网上散布和传播反动、色情或其它违反国家法律的信息，菜菜网的系统记录有可能作为用户违反法律的证据。<br />
+		  十． 保障用户<br />
+		  菜菜网同意保障和维护菜菜网全体成员的利益，负责支付违反服务条款的损害补偿费用等。<br />
+		  十一． 结束服务<br />
+		  用户或菜菜网可随时根据实际情况中断一项或多项网络服务。菜菜网不需对任何个人或第三方负责而随时中断服务。用户对后来的条款修改有异议，或对菜菜网的服务不满，可以行使如下权利：<br />
+		  (1)停止使用菜菜网的网络服务。<br />
+		  (2)通告菜菜网停止对该用户的服务。<br />
+		  结束用户服务后，用户使用网络服务的权利马上中止。从那时起，用户有权利，菜菜网也没有义务传送任何未处理的信息或未完成的服务给户或第三方。<br />
+		  十二． 通告<br />
+		  所有发给用户的通告都可通过重要页面的公告或电子邮件或常规的信件传送。用户协议条款的修改、服务变更、或其它重要事件的通告都会以此形式进行。<br />
+		  十三． 参与广告策划<br />
+		  用户在他们发表的信息中加入宣传资料或参与广告策划，在菜菜网的免费服务上展示他们的产品，任何这类促销方法，包括运输货物、付款、服务、商业条件、担保及与广告有关的描述都只是在相应的用户和广告销售商之间发生。菜菜网不承担任何责任，菜菜网没有义务为这类广告销售负任何一部分的责任。<br />
+		  十四． 网络服务内容的所有权<br />
+		  菜菜网定义的网络服务内容包括：文字、软件、声音、图片、录象、图表、广告中的全部内容；电子邮件的全部内容；菜菜网为用户提供的其它信息。所有这些内容受版权、商标、标签和其它财产所有权法律的保护。所以，用户只能在菜菜网和广告商授权下才能使用这些内容，而不能擅自复制、再造这些内容、或创造与内容有关的派生产品。菜菜网所有的文章版权归原文作者和菜菜网共同所有，任何人需要转载菜菜网的文章，必须征得原文作者或菜菜网授权。<br />
+		  十五． 责任限制<br />
+		  如因不可抗力或其它菜菜网无法控制的原因使菜菜网销售系统崩溃或无法正常使用导致网上交易无法完成或丢失有关的信息、记录等，菜菜网不承担责任。但是菜菜网会尽可能合理地协助处理善后事宜，并努力使客户免受经济损失。<br />
+		  除了菜菜网的使用条件中规定的其它限制和除外情况之外，在中国法律法规所允许的限度内，对于因交易而引起的或与之有关的任何直接的、间接的、特殊的、附带的、后果性的或惩罚性的损害，或任何其它性质的损害，菜菜网、菜菜网的董事、管理人员、雇员、代理或其它代表在任何情况下都不承担责任。菜菜网的全部责任，不论是合同、保证、侵权(包括过失)项下的还是其它的责任，均不超过用户所购买的与该索赔有关的商品价值额。<br />
+		  十六． 法律管辖和适用<br />
+		  本协议的订立、执行和解释及争议的解决均应适用中国法律。<br />
+		  如发生菜菜网服务条款与中国法律相抵触时，则这些条款将完全按法律规定重新解释，而其它合法条款则依旧保持对用户产生法律效力和影响。<br />
+		  本协议的规定是可分割的，如本协议任何规定被裁定为无效或不可执行，该规定可被删除而其余条款应予以执行。<br />
+		如双方就本协议内容或其执行发生任何争议，双方应尽力友好协商解决；协商不成时，任何一方均可向菜菜网所在地的人民法院提起诉讼。</div>
+
+
+	</div>
+		<input type="hidden" name="jump_fromurl" value="{$jump_fromurl}" id="id_jump_fromurl">
+	</form>
+</div>
+<script>
+kj.onload(function(){
+	kj.handler(".pTxt1","focus",function(){
+		kj.delClassName(this , "pTxt1");
+		kj.addClassName(this , "pTxt2");
+	});
+	kj.handler(".pTxt1","blur",function(){
+		kj.delClassName(this , "pTxt2");
+		kj.addClassName(this , "pTxt1");
+	});
+});
+var thisjs = new function() {
+	this.arealist = {$list_area["list"]};//json格式，指定id包函的子地区
+	this.areainfo = {$list_area["area"]};//对应id地区详细信息
+	this.depth = {$list_area["depth"]};//当前地区深度
+	this.defaultval = [];//格式化成数组
+	//地区下拉发生改变时触发
+	this.changearea = function(val , index) {
+		var obj,i,ii;
+		index++;
+		//当index大于深度时跳出
+		if(index>this.depth) return;
+		//发生改变后，重置之后的地区下拉
+		for(i = index ; i < this.depth; i++) {
+			obj = kj.obj("#id_area_" + i);
+			if(!obj) break;
+			obj.options.length = 0;
+		}
+		var key = "id_" + val;
+		if(!(key in this.arealist) || !("length" in this.arealist[key])) {
+			//跳出则刷新当前地区值
+			this.refresh_area_val();
+			return;
+		}
+		kj.add_option("#id_area_" + index , '' , '');
+		for(i = 0 ; i < this.arealist["id_"+val].length ; i++ ) {
+			obj = kj.obj("#id_area_" + index);
+			ii = this.arealist["id_"+val][i];
+			if( !("id_" + ii in this.areainfo ) ) continue;
+			kj.add_option(obj , this.areainfo["id_" + ii]["area_name"] , ii);
+			//选中默认值
+			if(this.defaultval.length>index && obj.options[i+1].value == this.defaultval[index]) {
+				obj.options[i+1].selected=true;
+			}
+		}
+		this.changearea(obj.value , index);
+		this.refresh_area_val();
+	}
+	this.refresh_area_val = function() {
+		var obj = kj.obj(":area_id[]");
+		var arr_id = [];
+		var arr_val = [];
+		var id = 0;
+		for(var i = 0 ; i < obj.length ; i++) {
+			if(obj[i].value != '') {
+				if( !("id_" + obj[i].value in this.areainfo ) ) continue;
+				arr_id[arr_id.length] = obj[i].value;
+				arr_val[arr_val.length] = this.areainfo["id_" + obj[i].value]["area_val"];
+			} else {
+				break;
+			}
+		}
+		if(arr_id.length>0) {
+			kj.obj("#id_shop_area_id").value = arr_id[arr_id.length-1];
+		} else {
+			kj.obj("#id_shop_area_id").value = '';
+		}
+		kj.obj("#id_shop_area_allid").value = arr_id.join(",");
+		kj.obj("#id_shop_area").value = arr_val.join(" ");
+	}
+	this.on_reg = function() {
+		kj.ajax.post(document.frm_main , function(data) {
+			var obj_data=kj.json(data);
+			if(obj_data.isnull) {
+				alert("系统繁忙，请稍后再来试试");
+			} else {
+				if(obj_data.code == 0) {
+					var url = kj.obj("#id_jump_fromurl").value;
+					if(url) {
+						window.open(url , "_self");
+					} else {
+						window.open("{cfg:(dirpath,base)}/index.php?app=shop" , "_self");
+					}
+				} else {
+					if('msg' in obj_data && obj_data.msg) {
+						alert(obj_data.msg);
+					} else {
+						alert("系统繁忙，请稍后再来试试");
+					}
+				}
+			}
+		});
+		return false;
+	}
+}
+
+</script>
+{include(footer)}
+</body>
+</html>

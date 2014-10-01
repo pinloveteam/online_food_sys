@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FoodList>
+	<Food id="0" name="sdf" price="23.00" Status="true" Quantity="23" />
+</FoodList>
