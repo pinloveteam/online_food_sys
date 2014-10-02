@@ -21,7 +21,7 @@
 						</div>
 						<div class="info">
 							<p class="title">开幕酬宾</p>
-							<p class="time text-16">时间：2014年10月10日至2014年10月13日</p>
+							<p class="time text-16">时间：2014年10月17日至2014年10月19日</p>
 							<p class="content text-16">优惠内容：全场五折</p>
 						</div>
 					</div>
