@@ -3,7 +3,7 @@
 
 	<head>
 		<meta charset="utf-8">
-		<title>主页</title>
+		<title>圣地亚哥奇味麻辣香锅</title>
 		<script src="webcss/new_module/js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="webcss/new_module/js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
 		<link rel="stylesheet" type="text/css" href="webcss/new_module/css/bootstrap.min.css" />
