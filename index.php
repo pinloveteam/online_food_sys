@@ -27,6 +27,9 @@
 						<div class="item active">
 							<a href="#"><img src="webcss/new_module/img/qiwei web-19.jpg" alt="..."></a>
 						</div>
+						<div class="item">
+							<a href="#"><img src="webcss/new_module/img/qiwei web-21.jpg" alt="..."></a>
+						</div>
 						<!--<div class="item">
 							<img src="..." alt="...">
 							<div class="carousel-caption">
